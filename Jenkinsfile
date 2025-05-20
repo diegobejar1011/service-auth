@@ -64,19 +64,19 @@ pipeline {
 
                         echo "Creando archivo .env..."
                         if [ ! -f "$REMOTE_PATH/.env" ]; then
-                            cat > $REMOTE_PATH/.env << EOF
-                        # PORT 
-                        PORT=${PORT}
-                        # Auth  
-                        JWT_SECRET_KEY=${SECRET_KEY}
-                        # Bcrypt 
-                        NUMBER_SALTS=${NUMBER_SALTS}
-                        # DB credentials 
-                        DB_HOST=${DB_HOST}
-                        DB_USER=${DB_USER}
-                        DB_PASSWORD=${DB_PASSWORD}
-                        DB_NAME=${DB_NAME}
-                        EOF
+                            cat > $REMOTE_PATH/.env << "EOL"
+# PORT 
+PORT=${PORT}
+# Auth  
+JWT_SECRET_KEY=${SECRET_KEY}
+# Bcrypt 
+NUMBER_SALTS=${NUMBER_SALTS}
+# DB credentials 
+DB_HOST=${DB_HOST}
+DB_USER=${DB_USER}
+DB_PASSWORD=${DB_PASSWORD}
+DB_NAME=${DB_NAME}
+EOL
                             echo "Archivo .env creado exitosamente."
                         else
                             echo "El archivo .env ya existe. No se ha sobrescrito."
