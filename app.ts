@@ -18,6 +18,10 @@ app.listen(app.get("PORT"), () => {
     console.log("API running in server...");
 });
 
+app.get("/", (req: Request, res: Response) => {
+    res.send("Hola, estas en dev!");
+});
+
 app.use("/users", userRouter);
 
 db.connect()
