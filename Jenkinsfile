@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
-    }
-
     environment {
         EC2_USER = 'ubuntu'
         SSH_KEY = credentials('ssh-key-ec2')
@@ -34,9 +30,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def ip = env.ACTUAL_BRANCH == 'develop' ? DEV_IP :
+                    def ip = env.ACTUAL_BRANCH == 'dev' ? DEV_IP :
                              env.ACTUAL_BRANCH == 'qa'      ? QA_IP :
-                             env.ACTUAL_BRANCH == 'master'    ? PROD_IP : null
+                             env.ACTUAL_BRANCH == 'main'    ? PROD_IP : null
 
                     def pm2_name = "${env.ACTUAL_BRANCH}-health"
 
@@ -63,13 +59,27 @@ pipeline {
 
                         echo "📁 Verificando carpeta de app..."
                         if [ ! -d "$REMOTE_PATH/.git" ]; then
-                            git clone https://github.com/AlbertoSMC72/GeradorTokens.git $REMOTE_PATH
+                            git clone https://github.com/diegobejar1011/service-auth.git $REMOTE_PATH
                         fi
 
-                        echo "Creado credenciales .env..."
+                        echo "Creando archivo .env..."
                         if [ ! -f "$REMOTE_PATH/.env" ]; then
-                            echo "URL_DB=$DB_URL" > $REMOTE_PATH/.env
-                            echo "SECRET_JWT=$SECRET_KEY" >> $REMOTE_PATH/.env
+                            cat > $REMOTE_PATH/.env << EOF
+                        # PORT 
+                        PORT=${PORT}
+                        # Auth  
+                        JWT_SECRET_KEY=${SECRET_KEY}
+                        # Bcrypt 
+                        NUMBER_SALTS=${NUMBER_SALTS}
+                        # DB credentials 
+                        DB_HOST=${DB_HOST}
+                        DB_USER=${DB_USER}
+                        DB_PASSWORD=${DB_PASSWORD}
+                        DB_NAME=${DB_NAME}
+                        EOF
+                            echo "Archivo .env creado exitosamente."
+                        else
+                            echo "El archivo .env ya existe. No se ha sobrescrito."
                         fi
 
                         echo "🔁 Pull y deploy..."
