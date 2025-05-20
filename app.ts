@@ -19,7 +19,7 @@ app.listen(app.get("PORT"), () => {
 });
 
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hola, estas en dev!");
+    res.send("Hola, estas en qa!");
 });
 
 app.use("/users", userRouter);

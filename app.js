@@ -18,7 +18,7 @@ app.listen(app.get("PORT"), () => {
     console.log("API running in server...");
 });
 app.get("/", (req, res) => {
-    res.send("Hola, estas en dev!");
+    res.send("Hola, estas en qa!");
 });
 app.use("/users", UserRouter_1.userRouter);
 conn_1.db.connect()
