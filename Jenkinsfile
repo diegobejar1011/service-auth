@@ -57,6 +57,11 @@ pipeline {
                             sudo npm install -g pm2
                         fi
 
+                        echo "📥 Verificando TypeScript..."
+                        if ! command -v tsc > /dev/null; then
+                            sudo npm install -g typescript
+                        fi
+
                         echo "📁 Verificando carpeta de app..."
                         if [ ! -d "$REMOTE_PATH/.git" ]; then
                             git clone https://github.com/diegobejar1011/service-auth.git $REMOTE_PATH
@@ -86,7 +91,8 @@ EOL
                         cd $REMOTE_PATH &&
                         git pull origin ${env.ACTUAL_BRANCH} &&
                         npm ci &&
-                        pm2 restart ${pm2_name} || pm2 start app.ts --name ${pm2_name}
+                        npm run build &&
+                        pm2 restart ${pm2_name} || pm2 start dist/app.js --name ${pm2_name}
                     '
                     """
                 }
