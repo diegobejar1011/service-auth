@@ -31,8 +31,8 @@ pipeline {
             steps {
                 script {
                     def ip = env.ACTUAL_BRANCH == 'dev' ? DEV_IP :
-                             env.ACTUAL_BRANCH == 'qa'      ? QA_IP :
-                             env.ACTUAL_BRANCH == 'main'    ? PROD_IP : null
+                             env.ACTUAL_BRANCH == 'qa'  ? QA_IP :
+                             env.ACTUAL_BRANCH == 'main' ? PROD_IP : null
 
                     def pm2_name = "${env.ACTUAL_BRANCH}-health"
 
@@ -64,19 +64,19 @@ pipeline {
 
                         echo "Creando archivo .env..."
                         if [ ! -f "$REMOTE_PATH/.env" ]; then
-                            cat > $REMOTE_PATH/.env << EOF
-                        # PORT 
-                        PORT=${PORT}
-                        # Auth  
-                        JWT_SECRET_KEY=${SECRET_KEY}
-                        # Bcrypt 
-                        NUMBER_SALTS=${NUMBER_SALTS}
-                        # DB credentials 
-                        DB_HOST=${DB_HOST}
-                        DB_USER=${DB_USER}
-                        DB_PASSWORD=${DB_PASSWORD}
-                        DB_NAME=${DB_NAME}
-                        EOF
+                            cat > $REMOTE_PATH/.env <<EOF
+# PORT 
+PORT=${PORT}
+# Auth  
+JWT_SECRET_KEY=${SECRET_KEY}
+# Bcrypt 
+NUMBER_SALTS=${NUMBER_SALTS}
+# DB credentials 
+DB_HOST=${DB_HOST}
+DB_USER=${DB_USER}
+DB_PASSWORD=${DB_PASSWORD}
+DB_NAME=${DB_NAME}
+EOF
                             echo "Archivo .env creado exitosamente."
                         else
                             echo "El archivo .env ya existe. No se ha sobrescrito."
