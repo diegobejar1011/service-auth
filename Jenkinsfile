@@ -1,9 +1,13 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS'
+    }
+
     environment {
         EC2_USER = 'ubuntu'
-        SSH_KEY = credentials('ssh-key-ec2-auth')
+        SSH_KEY = credentials('ssh-key-ec2')
         PORT = credentials('port')
         SECRET_KEY = credentials('secret-key')
         NUMBER_SALTS = credentials('number-salts')
@@ -57,14 +61,6 @@ pipeline {
                             sudo npm install -g pm2
                         fi
 
-                        echo "📥 Verificando TypeScript y ts-node..."
-                        if ! command -v tsc > /dev/null; then
-                            sudo npm install -g typescript
-                        fi
-                        if ! command -v ts-node > /dev/null; then
-                            sudo npm install -g ts-node
-                        fi
-
                         echo "📁 Verificando carpeta de app..."
                         if [ ! -d "$REMOTE_PATH/.git" ]; then
                             git clone https://github.com/diegobejar1011/service-auth.git $REMOTE_PATH
@@ -72,19 +68,19 @@ pipeline {
 
                         echo "Creando archivo .env..."
                         if [ ! -f "$REMOTE_PATH/.env" ]; then
-                            cat > $REMOTE_PATH/.env << "EOL"
-# PORT 
-PORT=${PORT}
-# Auth  
-JWT_SECRET_KEY=${SECRET_KEY}
-# Bcrypt 
-NUMBER_SALTS=${NUMBER_SALTS}
-# DB credentials 
-DB_HOST=${DB_HOST}
-DB_USER=${DB_USER}
-DB_PASSWORD=${DB_PASSWORD}
-DB_NAME=${DB_NAME}
-EOL
+                            cat > $REMOTE_PATH/.env << EOF
+                        # PORT 
+                        PORT=${PORT}
+                        # Auth  
+                        JWT_SECRET_KEY=${SECRET_KEY}
+                        # Bcrypt 
+                        NUMBER_SALTS=${NUMBER_SALTS}
+                        # DB credentials 
+                        DB_HOST=${DB_HOST}
+                        DB_USER=${DB_USER}
+                        DB_PASSWORD=${DB_PASSWORD}
+                        DB_NAME=${DB_NAME}
+                        EOF
                             echo "Archivo .env creado exitosamente."
                         else
                             echo "El archivo .env ya existe. No se ha sobrescrito."
@@ -94,7 +90,7 @@ EOL
                         cd $REMOTE_PATH &&
                         git pull origin ${env.ACTUAL_BRANCH} &&
                         npm ci &&
-                        pm2 restart ${pm2_name} || pm2 start app.ts --name ${pm2_name} --interpreter ts-node-esm
+                        pm2 restart ${pm2_name} || pm2 start app.js --name ${pm2_name}
                     '
                     """
                 }

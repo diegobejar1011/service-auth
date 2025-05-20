@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.loginController = exports.createUserController = void 0;
+const MysqlRepository_1 = require("./ports/mysql/MysqlRepository");
+const BcryptRepository_1 = require("./ports/bcrypt/BcryptRepository");
+const CreateUserService_1 = require("../application/CreateUserService");
+const LoginService_1 = require("../application/LoginService");
+const CreateUserController_1 = require("./controllers/CreateUserController");
+const LoginController_1 = require("./controllers/LoginController");
+const AuthDependencies_1 = require("../../auth/infraestructure/AuthDependencies");
+const mysqlRepository = new MysqlRepository_1.MysqlRepository();
+const bcryptRepository = new BcryptRepository_1.BcryptRepository();
+const createUserService = new CreateUserService_1.CreateUserService(mysqlRepository, bcryptRepository);
+const loginService = new LoginService_1.LoginService(mysqlRepository, bcryptRepository, AuthDependencies_1.createTokenService);
+exports.createUserController = new CreateUserController_1.CreateUserController(createUserService);
+exports.loginController = new LoginController_1.LoginController(loginService);
