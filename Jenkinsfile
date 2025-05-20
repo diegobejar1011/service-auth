@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EC2_USER = 'ubuntu'
-        SSH_KEY = credentials('ssh-key-ec2')
+        SSH_KEY = credentials('ssh-key-ec2-auth')
         PORT = credentials('port')
         SECRET_KEY = credentials('secret-key')
         NUMBER_SALTS = credentials('number-salts')
