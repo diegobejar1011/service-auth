@@ -57,9 +57,12 @@ pipeline {
                             sudo npm install -g pm2
                         fi
 
-                        echo "📥 Verificando TypeScript..."
+                        echo "📥 Verificando TypeScript y ts-node..."
                         if ! command -v tsc > /dev/null; then
                             sudo npm install -g typescript
+                        fi
+                        if ! command -v ts-node > /dev/null; then
+                            sudo npm install -g ts-node
                         fi
 
                         echo "📁 Verificando carpeta de app..."
@@ -91,8 +94,7 @@ EOL
                         cd $REMOTE_PATH &&
                         git pull origin ${env.ACTUAL_BRANCH} &&
                         npm ci &&
-                        npm run build &&
-                        pm2 restart ${pm2_name} || pm2 start app.js --name ${pm2_name}
+                        pm2 restart ${pm2_name} || pm2 start app.ts --name ${pm2_name} --interpreter ts-node
                     '
                     """
                 }
