@@ -92,7 +92,7 @@ EOL
                         git pull origin ${env.ACTUAL_BRANCH} &&
                         npm ci &&
                         npm run build &&
-                        pm2 restart ${pm2_name} || pm2 start dist/app.js --name ${pm2_name}
+                        pm2 restart ${pm2_name} || pm2 start app.js --name ${pm2_name}
                     '
                     """
                 }
