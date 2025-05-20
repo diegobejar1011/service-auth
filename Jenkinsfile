@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS'
-    }
-
     environment {
         EC2_USER = 'ubuntu'
         SSH_KEY = credentials('ssh-key-ec2')
